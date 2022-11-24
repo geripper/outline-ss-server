@@ -35,6 +35,7 @@ type Client interface {
 	SetTCPSaltGenerator(ss.SaltGenerator)
 
 	TCPFd() int
+	UDPFd() int
 }
 
 // NewClient creates a client that routes connections to a Shadowsocks proxy listening at
