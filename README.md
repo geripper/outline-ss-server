@@ -1,6 +1,6 @@
 # Outline ss-server
 
-![Build Status](https://github.com/Jigsaw-Code/outline-ss-server/actions/workflows/go.yml/badge.svg)
+![Build Status](https://github.com/geripper/outline-ss-server/actions/workflows/go.yml/badge.svg)
 [![Mattermost](https://badgen.net/badge/Mattermost/Outline%20Community/blue)](https://community.internetfreedomfestival.org/community/channels/outline-community)
 [![Reddit](https://badgen.net/badge/Reddit/r%2Foutlinevpn/orange)](https://www.reddit.com/r/outlinevpn/)
 
@@ -131,14 +131,14 @@ make test
 
 You can benchmark the cipher finding code with
 ```
-go test -cpuprofile cpu.prof -memprofile mem.prof -bench . -benchmem -run=^$ github.com/Jigsaw-Code/outline-ss-server/shadowsocks
+go test -cpuprofile cpu.prof -memprofile mem.prof -bench . -benchmem -run=^$ github.com/geripper/outline-ss-server/shadowsocks
 ```
 
 You can inspect the CPU or memory profiles with `go tool pprof cpu.prof` or `go tool pprof mem.prof`, and then enter `web` on the prompt.
 
 ## Release
 
-We use [GoReleaser](https://goreleaser.com/) to build and upload binaries to our [GitHub releases](https://github.com/Jigsaw-Code/outline-ss-server/releases).
+We use [GoReleaser](https://goreleaser.com/) to build and upload binaries to our [GitHub releases](https://github.com/geripper/outline-ss-server/releases).
 
 Summary:
 - Test the build locally:
@@ -158,7 +158,7 @@ Summary:
   ```bash
   make release
   ```
-- Go to https://github.com/Jigsaw-Code/outline-ss-server/releases, review and publish the release.
+- Go to https://github.com/geripper/outline-ss-server/releases, review and publish the release.
 
 - Delete the Github token you created for the release on the [Personal Access Tokens page](https://github.com/settings/tokens).
 

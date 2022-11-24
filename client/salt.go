@@ -18,7 +18,7 @@ import (
 	"crypto/rand"
 	"errors"
 
-	ss "github.com/Jigsaw-Code/outline-ss-server/shadowsocks"
+	ss "github.com/geripper/outline-ss-server/shadowsocks"
 )
 
 type prefixSaltGenerator struct {

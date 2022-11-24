@@ -17,7 +17,7 @@ package client
 import (
 	"testing"
 
-	ss "github.com/Jigsaw-Code/outline-ss-server/shadowsocks"
+	ss "github.com/geripper/outline-ss-server/shadowsocks"
 )
 
 // setRandomBitsToOne replaces any random bits in the output with 1.

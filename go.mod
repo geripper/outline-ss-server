@@ -1,4 +1,4 @@
-module github.com/Jigsaw-Code/outline-ss-server
+module github.com/geripper/outline-ss-server
 
 require (
 	github.com/goreleaser/goreleaser v1.12.3
@@ -174,4 +174,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-go 1.19
+go 1.18

@@ -6,9 +6,9 @@ import (
 	"net"
 	"time"
 
-	onet "github.com/Jigsaw-Code/outline-ss-server/net"
-	ss "github.com/Jigsaw-Code/outline-ss-server/shadowsocks"
-	"github.com/Jigsaw-Code/outline-ss-server/slicepool"
+	onet "github.com/geripper/outline-ss-server/net"
+	ss "github.com/geripper/outline-ss-server/shadowsocks"
+	"github.com/geripper/outline-ss-server/slicepool"
 	"github.com/shadowsocks/go-shadowsocks2/socks"
 )
 
