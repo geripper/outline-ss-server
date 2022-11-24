@@ -97,8 +97,15 @@ func (c *ssClient) DialTCP(laddr *net.TCPAddr, raddr string) (onet.DuplexConn, e
 	time.AfterFunc(helloWait, func() {
 		ssw.Flush()
 	})
+
+	connFd := 0
+	fd, err := proxyConn.File()
+	if err == nil {
+		connFd = int(fd.Fd())
+	}
+
 	ssr := ss.NewShadowsocksReader(proxyConn, c.cipher)
-	return onet.WrapConn(proxyConn, ssr, ssw), nil
+	return onet.WrapConn(proxyConn, ssr, ssw, connFd), nil
 }
 
 func (c *ssClient) ListenUDP(laddr *net.UDPAddr) (net.PacketConn, error) {
@@ -107,11 +114,18 @@ func (c *ssClient) ListenUDP(laddr *net.UDPAddr) (net.PacketConn, error) {
 	if err != nil {
 		return nil, err
 	}
-	conn := packetConn{UDPConn: pc, cipher: c.cipher}
+
+	connFd := 0
+	fd, err := pc.File()
+	if err == nil {
+		connFd = int(fd.Fd())
+	}
+	conn := packetConn{UDPConn: pc, cipher: c.cipher, fd: connFd}
 	return &conn, nil
 }
 
 type packetConn struct {
+	fd int
 	*net.UDPConn
 	cipher *ss.Cipher
 }
@@ -162,6 +176,10 @@ func (c *packetConn) ReadFrom(b []byte) (int, net.Addr, error) {
 		return n, srcAddr, io.ErrShortBuffer
 	}
 	return n, srcAddr, nil
+}
+
+func (c *packetConn) Fd() int {
+	return c.fd
 }
 
 type addr struct {

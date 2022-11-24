@@ -21,3 +21,5 @@
 
 # Git submodules
 /third_party/maxmind/
+.idea
+.vscode
