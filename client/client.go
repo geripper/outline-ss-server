@@ -33,6 +33,8 @@ type Client interface {
 	// `salter` may be `nil`.
 	// This method is not thread-safe.
 	SetTCPSaltGenerator(ss.SaltGenerator)
+
+	TCPFd() int
 }
 
 // NewClient creates a client that routes connections to a Shadowsocks proxy listening at
@@ -57,6 +59,8 @@ type ssClient struct {
 	proxyPort int
 	cipher    *ss.Cipher
 	salter    ss.SaltGenerator
+	tcpFd     int
+	udpFd     int
 }
 
 func (c *ssClient) SetTCPSaltGenerator(salter ss.SaltGenerator) {
@@ -98,14 +102,17 @@ func (c *ssClient) DialTCP(laddr *net.TCPAddr, raddr string) (onet.DuplexConn, e
 		ssw.Flush()
 	})
 
-	connFd := 0
 	fd, err := proxyConn.File()
 	if err == nil {
-		connFd = int(fd.Fd())
+		c.tcpFd = int(fd.Fd())
 	}
 
 	ssr := ss.NewShadowsocksReader(proxyConn, c.cipher)
-	return onet.WrapConn(proxyConn, ssr, ssw, connFd), nil
+	return onet.WrapConn(proxyConn, ssr, ssw, c.tcpFd), nil
+}
+
+func (c *ssClient) TCPFd() int {
+	return c.tcpFd
 }
 
 func (c *ssClient) ListenUDP(laddr *net.UDPAddr) (net.PacketConn, error) {
@@ -115,17 +122,19 @@ func (c *ssClient) ListenUDP(laddr *net.UDPAddr) (net.PacketConn, error) {
 		return nil, err
 	}
 
-	connFd := 0
 	fd, err := pc.File()
 	if err == nil {
-		connFd = int(fd.Fd())
+		c.udpFd = int(fd.Fd())
 	}
-	conn := packetConn{UDPConn: pc, cipher: c.cipher, fd: connFd}
+	conn := packetConn{UDPConn: pc, cipher: c.cipher}
 	return &conn, nil
 }
 
+func (c *ssClient) UDPFd() int {
+	return c.udpFd
+}
+
 type packetConn struct {
-	fd int
 	*net.UDPConn
 	cipher *ss.Cipher
 }
@@ -176,10 +185,6 @@ func (c *packetConn) ReadFrom(b []byte) (int, net.Addr, error) {
 		return n, srcAddr, io.ErrShortBuffer
 	}
 	return n, srcAddr, nil
-}
-
-func (c *packetConn) Fd() int {
-	return c.fd
 }
 
 type addr struct {

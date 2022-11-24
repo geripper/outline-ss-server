@@ -18,7 +18,6 @@ type DuplexConn interface {
 }
 
 type duplexConnAdaptor struct {
-	fd int
 	DuplexConn
 	r io.Reader
 	w io.Writer
@@ -42,9 +41,6 @@ func (dc *duplexConnAdaptor) ReadFrom(r io.Reader) (int64, error) {
 func (dc *duplexConnAdaptor) CloseWrite() error {
 	return dc.DuplexConn.CloseWrite()
 }
-func (dc *duplexConnAdaptor) Fd() int {
-	return dc.fd
-}
 
 // WrapDuplexConn wraps an existing DuplexConn with new Reader and Writer, but
 // preserving the original CloseRead() and CloseWrite().
@@ -54,7 +50,7 @@ func WrapConn(c DuplexConn, r io.Reader, w io.Writer, fd int) DuplexConn {
 	if a, ok := c.(*duplexConnAdaptor); ok {
 		conn = a.DuplexConn
 	}
-	return &duplexConnAdaptor{DuplexConn: conn, r: r, w: w, fd: fd}
+	return &duplexConnAdaptor{DuplexConn: conn, r: r, w: w}
 }
 
 func copyOneWay(leftConn, rightConn DuplexConn) (int64, error) {
